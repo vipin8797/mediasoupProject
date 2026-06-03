@@ -36,6 +36,15 @@ const config = {
                         },
                 },
         ],
+
+
+
+        //Params to create Transport in Client class function
+        webRtcTransport:{
+                listenIps:[{ip:'0.0.0.0' , announceAddress:'127.0.0.0'}],
+                maxIncommingBitrate:5000000,
+                initialAvailabelOutgoingBiterate:1000000,
+        }
 };
 
 module.exports = config;
