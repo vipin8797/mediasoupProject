@@ -1,12 +1,10 @@
+const createProducerTransport = async (socket) => {
+  // server se transport params mango
+  const producerTransportParams = await socket.emitWithAck("request-transport", {
+    type: "producer",
+  });
 
-
-const createProducerTransport  = (socket)=>{
-    Promise(async(resolve,reject)=>{
-        //server se transport params mango
-   const producerTranportParams = await socket.emitWithAck("request-transport",{type:'producer'});
-
-    })
-}
-
+  console.log("transportParams: ", producerTransportParams);
+};
 
 export default createProducerTransport;
