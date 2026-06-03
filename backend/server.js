@@ -90,8 +90,23 @@ io.on("connection",(socket)=>{
         console.warn(err);
 
     }
-    })
-    
+    });
+
+
+
+  //Event to create Transport both Producer and Consumer
+  socket.on("request-transport",async({type},ack)=>{
+    let clientTranportParams = null;  //params to sent to client
+
+    if(type === 'producer'){
+         clientTranportParams = await client.addTransport(type);
+        }else if(type === "consumer"){
+        clientTranportParams = await client.addTransport(type);
+    }
+
+    ack(clientTranportParams);
+
+  })  
     
     
 
