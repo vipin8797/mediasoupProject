@@ -21,7 +21,7 @@ socket.on("connect",()=>{
 const enableFeed = async () => {
     const localStream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: true,
+        // audio: true,
     });
 
     buttons.localMediaLeft.srcObject = localStream;
@@ -58,10 +58,12 @@ buttons.control.classList.remove("d-none");
 
 
 const sendFeed = async()=>{
+  
   producerTransport = await createProducerTransport(socket);
+  console.log("producerTransport: ",producerTransport);
 }
 
 
 buttons.joinRoom.addEventListener("click",joinRoom);
 buttons.enableFeed.addEventListener("click",enableFeed);
-buttons.sendFeed.addEventListener("click",enableFeed);
+buttons.sendFeed.addEventListener("click",sendFeed);
