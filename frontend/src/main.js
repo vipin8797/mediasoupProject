@@ -1,69 +1,69 @@
+// ════════════════════════════════════════
+//  main.js
+//  Purpose : App entry point — socket, 
+//            device, transport setup
+// ════════════════════════════════════════
 
-//Importing Dependencies
+
+// ── Dependencies ─────────────────────────
 import './style.css'
 import buttons from "../uiStuff/uiButtons";
-import {Device} from 'mediasoup-client';
+import { Device } from 'mediasoup-client';
 import { io } from "socket.io-client";
 import createProducerTransport from '../mediasoupFunction/createProducerTransport';
 
-//Global variables
+
+// ── Global Variables ──────────────────────
 let device = null;
 let producerTransport = null;
 
-//Using Dependencies
+
+// ── Socket Init ───────────────────────────
 const socket = io("http://localhost:3000");
-socket.on("connect",()=>{
+socket.on("connect", () => {
   console.log(`connected: ${socket.id}`);
 });
 
 
-//Function to get User Media
+// ── enableFeed() ──────────────────────────
+// Camera stream lo aur UI update karo
 const enableFeed = async () => {
-    const localStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        // audio: true,
-    });
+  const localStream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    // audio: true,
+  });
 
-    buttons.localMediaLeft.srcObject = localStream;
-    buttons.enableFeed.disabled = true;
-    buttons.sendFeed.disabled = false;
-    buttons.muteBtn.disabled = false;
-}
-
-
-// console.log("main.js rendered");
+  buttons.localMediaLeft.srcObject = localStream;
+  buttons.enableFeed.disabled = true;
+  buttons.sendFeed.disabled = false;
+  buttons.muteBtn.disabled = false;
+};
 
 
-
-
-
-const joinRoom = async()=>{
-  console.log("room joined clicked");
-  const roomName = document .getElementById("room-input").value;
+// ── joinRoom() ────────────────────────────
+// Room join karo, device load karo
+const joinRoom = async () => {
+  const roomName = document.getElementById("room-input").value;
   const userName = document.getElementById("username").value;
 
-  const response = await socket.emitWithAck("joinRoom",({roomName,userName}));
+  const response = await socket.emitWithAck("joinRoom", { roomName, userName });
+
   device = new Device();
-  await device.load({
-    routerRtpCapabilities:response.routerRtpCapabilities,
-  });
-  // console.log(response);
-  console.log(device);
+  await device.load({ routerRtpCapabilities: response.routerRtpCapabilities });
 
-//enabling UI buttons
-buttons.control.classList.remove("d-none");
-
-}
+  buttons.control.classList.remove("d-none");
+};
 
 
+// ── sendFeed() ────────────────────────────
+// ProducerTransport banao aur stream bhejo
+const sendFeed = async () => {
+  producerTransport = await createProducerTransport(socket, device);
+  console.log("producerTransport: ", producerTransport);
+};
 
-const sendFeed = async()=>{
-  
-  producerTransport = await createProducerTransport(socket);
-  console.log("producerTransport: ",producerTransport);
-}
 
-
-buttons.joinRoom.addEventListener("click",joinRoom);
-buttons.enableFeed.addEventListener("click",enableFeed);
-buttons.sendFeed.addEventListener("click",sendFeed);
+// ── Event Listeners ───────────────────────
+buttons.joinRoom.addEventListener("click", joinRoom);
+buttons.enableFeed.addEventListener("click", enableFeed);
+buttons.sendFeed.addEventListener("click", sendFeed);
