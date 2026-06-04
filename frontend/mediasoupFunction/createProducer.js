@@ -13,8 +13,8 @@ const createProducer = (localStream, producerTransport) => {
 
     try {
       // STEP 1: get audio & video tracks from local stream
-      const audioTrack = localStream.getAudioTracks()[0];
-      const videoTrack = localStream.getVideoTracks()[0];
+      const audioTrack = await localStream.getAudioTracks()[0];
+      const videoTrack = await localStream.getVideoTracks()[0];
 
       // STEP 2: create audio producer
       const audioProducer = await producerTransport.produce({

@@ -11,12 +11,13 @@ import buttons from "../uiStuff/uiButtons";
 import { Device } from 'mediasoup-client';
 import { io } from "socket.io-client";
 import createProducerTransport from '../mediasoupFunction/createProducerTransport';
+import createProducer from "../mediasoupFunction/createProducer";
 
 
 // ── Global Variables ──────────────────────
 let device = null;
 let producerTransport = null;
-
+let localStream = null;
 
 // ── Socket Init ───────────────────────────
 const socket = io("http://localhost:3000");
@@ -28,9 +29,9 @@ socket.on("connect", () => {
 // ── enableFeed() ──────────────────────────
 // Camera stream lo aur UI update karo
 const enableFeed = async () => {
-  const localStream = await navigator.mediaDevices.getUserMedia({
+   localStream = await navigator.mediaDevices.getUserMedia({
     video: true,
-    // audio: true,
+    audio: true,
   });
 
   buttons.localMediaLeft.srcObject = localStream;
@@ -60,6 +61,8 @@ const joinRoom = async () => {
 const sendFeed = async () => {
   producerTransport = await createProducerTransport(socket, device);
   console.log("producerTransport: ", producerTransport);
+  const producers = await createProducer(localStream, producerTransport);
+  console.log("prodcers created: ",producers);
 };
 
 
