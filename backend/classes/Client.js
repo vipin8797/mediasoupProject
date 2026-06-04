@@ -17,14 +17,14 @@ class Client {
     return new Promise(async (resolve, reject) => {
       const {
         listenIps,
-        initialAvailabelOutgoingBiterate,
+        initialAvailableOutgoingBitrate,
         maxIncomingBitrate,
       } = config.webRtcTransport;
 
       //creating transport and router will get from Room object
       const transport = await this.room.router.createWebRtcTransport({
         listenIps,
-        initialAvailabelOutgoingBiterate,
+        initialAvailableOutgoingBitrate,
         enableUdp: true,
         enableTcp: true,
         preferUdp: true,
